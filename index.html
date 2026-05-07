@@ -1,83 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
+
 <head>
   <meta charset="utf-8">
-  <title>Modelo 3D A-Frame</title>
+  <title>Modelo 3D AR - A-Frame</title>
+
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
 </head>
 
 <body>
 
 <a-scene
+  id="scene"
   webxr="optionalFeatures: hit-test, local-floor"
-  renderer="alpha: true"
-  vr-mode-ui="enabled: true"
-  id="scene">
+  renderer="alpha: true; antialias: true"
+  vr-mode-ui="enabled: true">
 
   <!-- Fondo -->
   <a-sky id="sky" src="image.png"></a-sky>
 
   <!-- Luces -->
-  <a-light type="ambient" intensity="0.5"></a-light>
+  <a-light
+    type="ambient"
+    intensity="0.8">
+  </a-light>
 
-  <a-light 
+  <a-light
     type="directional"
     position="2 5 3"
     intensity="1"
-    castShadow="true">
+    cast-shadow="true">
   </a-light>
 
   <!-- Cámara -->
-  <a-camera position="0 1.6 6"></a-camera>
+  <a-camera
+    id="camera"
+    position="0 1.6 6">
+  </a-camera>
 
   <!-- Modelo -->
-  <a-entity 
+  <a-entity
     id="modelo"
     gltf-model="Templo del sol.glb"
+
     position="0 0.8 0"
+
     scale="1.3 1.3 1.3"
-    shadow="cast: true">
+
+    rotation="0 180 0"
+
+    shadow="cast: true; receive: true">
   </a-entity>
 
 </a-scene>
 
 <script>
+
 const scene = document.querySelector('#scene');
 const sky = document.querySelector('#sky');
 const modelo = document.querySelector('#modelo');
 
-// 🔥 Entrar a AR
+
+// =========================
+// ENTRAR A AR
+// =========================
 scene.addEventListener('enter-vr', () => {
 
+  // verificar que sea AR
   if (scene.is('ar-mode')) {
 
-    console.log("Entrando a AR");
+    console.log("Modo AR iniciado");
 
-    // ocultar fondo
-    sky.setAttribute('visible', 'false');
+    // ocultar fondo 360
+    sky.setAttribute('visible', false);
 
-    // 🔥 reducir tamaño SOLO en AR
-    modelo.setAttribute('scale', '0.05 0.05 0.05');
+    // 🔥 ALEJAR MODELO
+    modelo.setAttribute('position', '0 -1 -15');
 
-    // mover modelo un poco adelante
-    modelo.setAttribute('position', '0 0 -2');
+    // 🔥 REDUCIR TAMAÑO
+    modelo.setAttribute('scale', '0.01 0.01 0.01');
+
+    // opcional
+    modelo.setAttribute('rotation', '0 180 0');
   }
 });
 
-// 🔥 Salir de AR
+
+// =========================
+// SALIR DE AR
+// =========================
 scene.addEventListener('exit-vr', () => {
 
-  console.log("Saliendo de AR");
+  console.log("Saliendo AR");
 
-  // restaurar fondo
-  sky.setAttribute('visible', 'true');
+  // mostrar fondo nuevamente
+  sky.setAttribute('visible', true);
+
+  // restaurar posición original
+  modelo.setAttribute('position', '0 0.8 0');
 
   // restaurar tamaño original
-  modelo.setAttribute('scale', '0.8 0.8 0.8');
+  modelo.setAttribute('scale', '1.3 1.3 1.3');
 
-  // restaurar posición
-  modelo.setAttribute('position', '0 0.8 0');
 });
+
 </script>
 
 </body>
