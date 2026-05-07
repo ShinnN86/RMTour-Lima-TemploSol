@@ -3,14 +3,19 @@
 <head>
   <meta charset="utf-8">
   <title>Modelo 3D A-Frame</title>
-  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 </head>
 
 <body>
-<a-scene shadow="type: pcfsoft">
 
-  <!-- Fondo con imagen -->
-  <a-sky src="image.png"></a-sky>
+<a-scene
+  webxr="optionalFeatures: hit-test, local-floor"
+  renderer="alpha: true"
+  vr-mode-ui="enabled: true"
+  id="scene">
+
+  <!-- Fondo -->
+  <a-sky id="sky" src="image.png"></a-sky>
 
   <!-- Luces -->
   <a-light type="ambient" intensity="0.5"></a-light>
@@ -23,17 +28,51 @@
   </a-light>
 
   <!-- Cámara -->
-<a-camera position="0 1.6 6" wasd-controls-enabled="false"></a-camera>
+  <a-camera position="0 1.6 6"></a-camera>
 
   <!-- Modelo -->
   <a-entity 
     gltf-model="Templo del sol.glb"
     position="0 0.8 0"
-    scale="2 2 2"
+    scale="0.8 0.8 0.8"
     shadow="cast: true"
-    animation="property: rotation; to: 0 360 0; loop: true; dur: 20000; easing: linear">
+    
   </a-entity>
 
 </a-scene>
+
+<script>
+const scene = document.querySelector('#scene');
+const sky = document.querySelector('#sky');
+
+// 🔥 Cuando entra a AR
+scene.addEventListener('enter-vr', () => {
+  if (scene.is('ar-mode')) {
+    console.log("Entrando a AR");
+
+    // ocultar cielo
+    sky.setAttribute('visible', 'false');
+
+    // opcional: bajar luces
+    document.querySelectorAll('a-light').forEach(l => {
+      l.setAttribute('intensity', 0.8);
+    });
+  }
+});
+
+// 🔥 Cuando sale de AR
+scene.addEventListener('exit-vr', () => {
+  console.log("Saliendo de AR");
+
+  // restaurar cielo
+  sky.setAttribute('visible', 'true');
+
+  // restaurar luces
+  document.querySelectorAll('a-light').forEach(l => {
+    l.setAttribute('intensity', 1);
+  });
+});
+</script>
+
 </body>
 </html>
