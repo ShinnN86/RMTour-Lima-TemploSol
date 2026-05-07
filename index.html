@@ -4,9 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>Modelo 3D AR - A-Frame</title>
-
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-
   <style>
     body {
       margin: 0;
@@ -14,19 +12,15 @@
     }
   </style>
 </head>
-
 <body>
-
 <a-scene
   id="scene"
   webxr="optionalFeatures: hit-test, local-floor"
   renderer="alpha: true; antialias: true"
   vr-mode-ui="enabled: true">
 
-  <!-- Fondo -->
   <a-sky id="sky" src="image.png"></a-sky>
 
-  <!-- Luces -->
   <a-light
     type="ambient"
     intensity="0.8">
@@ -39,21 +33,16 @@
     cast-shadow="true">
   </a-light>
 
-  <!-- Cámara -->
   <a-camera
     id="camera"
     position="0 1.6 6">
   </a-camera>
 
-  <!-- Modelo -->
   <a-entity
     id="modelo"
     gltf-model="Templo del sol.glb"
-
     position="0 0.8 0"
-
     scale="1.3 1.3 1.3"
-
     shadow="cast: true"
   </a-entity>
 
@@ -65,45 +54,21 @@ const scene = document.querySelector('#scene');
 const sky = document.querySelector('#sky');
 const modelo = document.querySelector('#modelo');
 
-
-// =========================
-// ENTRAR A AR
-// =========================
 scene.addEventListener('enter-vr', () => {
 
-  // verificar que sea AR
   if (scene.is('ar-mode')) {
 
     console.log("Modo AR iniciado");
-
-    // ocultar fondo 360
     sky.setAttribute('visible', false);
-
-    // 🔥 ALEJAR MODELO
     modelo.setAttribute('position', '0 0 -11');
-
-    // 🔥 REDUCIR TAMAÑO
     modelo.setAttribute('scale', '2 2 2');
-
-  
   }
 });
 
-
-// =========================
-// SALIR DE AR
-// =========================
 scene.addEventListener('exit-vr', () => {
-
   console.log("Saliendo AR");
-
-  // mostrar fondo nuevamente
   sky.setAttribute('visible', true);
-
-  // restaurar posición original
   modelo.setAttribute('position', '0 0.8 0');
-
-  // restaurar tamaño original
   modelo.setAttribute('scale', '1.3 1.3 1.3');
 
 });
